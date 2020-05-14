@@ -15,12 +15,10 @@ class CreateTransactionService {
   }
 
   public execute({ title, value, type }: Request): Transaction {
-    const balance = this.transactionsRepository.getBalance();
+    const { total } = this.transactionsRepository.getBalance();
 
-    if (type === 'outcome' && balance.total < value) {
-      throw Error(
-        'It is not possible to create transaction without a valid balance',
-      );
+    if (type === 'outcome' && total < value) {
+      throw Error('You can not create outcome bigger then your balance.');
     }
 
     const transaction = this.transactionsRepository.create({
